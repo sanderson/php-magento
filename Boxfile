@@ -1,0 +1,51 @@
+build:
+  type: php
+  after_exec:
+    # Run script that will generate local.xml config file and place it in app/etc/
+    - "php pagoda/local_xml_generator.php"
+
+web1:
+  name: mag-app
+  type: php
+  network_dirs:
+    storage1:
+      - media
+      - var
+  php_extensions:
+    - pdo_mysql
+    - mysql
+    - simplexml
+    - mcrypt
+    - hash
+    - gd
+    - dom
+    - iconv
+    - curl
+    - soap
+    - apc
+    - redis
+  httpd_static_expire: 31536000
+  before_deploy:
+    - "cp pagoda/media/.htaccess media/"
+    - "cp pagoda/var/.htaccess var/"
+  after_deploy:
+    - "php index.php > /dev/null"
+  php_max_execution_time: 100
+  cron:
+    - "*/15 * * * *": "php cron.php"
+
+database1:
+  name: mag-db
+  type: mysql
+
+cache1:
+  name: mag-cache
+  type: redis
+
+cache2:
+  name: mag-session
+  type: redis
+
+storage1:
+  name: mag-writables
+  type: nfs

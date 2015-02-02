@@ -1,0 +1,6 @@
+var/*
+downloader/cache.cfg
+downloader/connect.cfg
+media/*
+app/etc/local.xml
+*.DS_Store
